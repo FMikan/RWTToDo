@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/miki/GitHubProjects/Tasko/Backend/Backend.csproj": {}
+    "/home/miki/GitHubProjects/RWTToDo/Backend/Backend.csproj": {}
   },
   "projects": {
-    "/home/miki/GitHubProjects/Tasko/Backend/Backend.csproj": {
+    "/home/miki/GitHubProjects/RWTToDo/Backend/Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/miki/GitHubProjects/Tasko/Backend/Backend.csproj",
+        "projectUniqueName": "/home/miki/GitHubProjects/RWTToDo/Backend/Backend.csproj",
         "projectName": "Backend",
-        "projectPath": "/home/miki/GitHubProjects/Tasko/Backend/Backend.csproj",
+        "projectPath": "/home/miki/GitHubProjects/RWTToDo/Backend/Backend.csproj",
         "packagesPath": "/home/miki/.nuget/packages/",
-        "outputPath": "/home/miki/GitHubProjects/Tasko/Backend/obj/",
+        "outputPath": "/home/miki/GitHubProjects/RWTToDo/Backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/miki/.nuget/NuGet/NuGet.Config"
@@ -20,6 +20,7 @@
           "net9.0"
         ],
         "sources": {
+          "/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -38,7 +39,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -47,6 +48,18 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
             }
           },
           "imports": [
@@ -68,7 +81,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/home/miki/.dotnet/sdk/9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

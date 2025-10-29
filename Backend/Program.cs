@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Register database
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 builder.Services.AddSwaggerGen();
 
