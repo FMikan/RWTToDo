@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "RnM5k5KISzs=",
+  "dgSpecHash": "Wlqc78vwzNo=",
   "success": true,
   "projectFilePath": "/home/miki/GitHubProjects/RWTToDo/Backend/Backend.csproj",
   "expectedPackageFiles": [
+    "/home/miki/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/miki/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/miki/.nuget/packages/microsoft.aspnetcore.openapi/9.0.10/microsoft.aspnetcore.openapi.9.0.10.nupkg.sha512",
     "/home/miki/.nuget/packages/microsoft.bcl.asyncinterfaces/7.0.0/microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
