@@ -18,7 +18,6 @@ obj/
 Backend/Properties/launchSettings.json
 
 # Konfiguracijski fajlovi s osjetljivim podacima (connection stringovi, API ključevi)
-appsettings.json
 appsettings.Development.json
 
 # HTTP testni fajlovi (ako ih koristiš i ne želiš ih pushati)
