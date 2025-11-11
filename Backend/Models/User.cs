@@ -1,4 +1,3 @@
-using System;  
 using System.ComponentModel.DataAnnotations;    
 
 namespace Backend.Models 
@@ -18,10 +17,11 @@ namespace Backend.Models
  
          [Required]
          [EmailAddress]  
-         [StringLength(255)]
+         [StringLength(100)]
          public string Email { get; set; } = string.Empty; 
  
          [Required]
+         [MaxLength(100)]
          public string PasswordHash { get; set; } = string.Empty;   
          public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
      }
