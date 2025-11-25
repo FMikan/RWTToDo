@@ -27,25 +27,12 @@ namespace Backend.Controllers{
     	{
 			if (!ModelState.IsValid)
         		return BadRequest(ModelState);
-     
-        	if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 8)
-        		return BadRequest("Lozinka mora imati minimalno 8 znakova.");
-   
-			if (string.IsNullOrWhiteSpace(request.Email))
-        		return BadRequest("Email je obavezan.");
 
 			var normalizedEmail = request.Email.Trim().ToLowerInvariant();
-      
-        	if (!request.Password.Any(char.IsDigit))
-           		return BadRequest("Lozinka mora sadržavati barem jedan broj.");
-    
-        	if (!new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(normalizedEmail))
-        		return BadRequest("Neispravan format emaila.");
 
         	if (await _context.Users.AnyAsync(u => u.Email.ToLower() == normalizedEmail))
-        		return BadRequest("Korisnik s ovim emailom već postoji.");
-            
-        
+        		return BadRequest("A user with this email already exists.");
+	        
         	string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
         
         	var user = new User
@@ -63,7 +50,7 @@ namespace Backend.Controllers{
    			}
     		catch
     		{
-        		return StatusCode(500, "Greška pri spremanju podataka.");
+        		return StatusCode(500, "Error saving data.");
     		}	
         
         	return StatusCode(201); 
@@ -82,7 +69,7 @@ namespace Backend.Controllers{
 		
 			if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
 			{
-				return Unauthorized("Neispravan email ili lozinka.");
+				return Unauthorized("Incorrect email or password.");
 			}
 		
 			var claims = new List<Claim>
