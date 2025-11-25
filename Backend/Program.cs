@@ -1,6 +1,8 @@
 using System.Text;
+using Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using Backend.Data;
+using Backend.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -37,6 +39,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<JwtAuthenticationService>();
+builder.Services.AddScoped<RefreshTokenRepository>();
+
 
 var app = builder.Build();
 

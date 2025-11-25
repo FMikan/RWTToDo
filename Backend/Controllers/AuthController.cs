@@ -1,11 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Data; 
 using Backend.Models;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using Backend.Services;
 
 namespace Backend.Controllers{
 
@@ -14,14 +12,15 @@ namespace Backend.Controllers{
 	public class AuthController : ControllerBase
 	{
 		private readonly AppDbContext _context;
-		private readonly IConfiguration _configuration;
-
-		public AuthController(AppDbContext context, IConfiguration configuration)
+		private readonly JwtAuthenticationService _jwtAuthenticationService;
+		
+		public AuthController(AppDbContext context, JwtAuthenticationService jwtAuthenticationService)
 		{
 			_context = context;
-			_configuration = configuration;
+			_jwtAuthenticationService = jwtAuthenticationService;
 		}
 		
+		[AllowAnonymous]
     	[HttpPost("register")]
     	public async Task<IActionResult> Register(UserRegisterDto request)
     	{
@@ -56,46 +55,31 @@ namespace Backend.Controllers{
         	return StatusCode(201); 
 		}
 	    
-	    
+	    [AllowAnonymous]
 	    [HttpPost("login")]
-		public async Task<IActionResult> Login(UserLoginDto request)
+		public async Task<ActionResult<UserLoginResponse>> Login([FromBody] UserLoginDto request)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
-		
-			var normalizedEmail = request.Email.Trim().ToLowerInvariant();
-		
-			var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
-		
-			if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-			{
-				return Unauthorized("Incorrect email or password.");
-			}
-		
-			var claims = new List<Claim>
-			{
-				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-			};
 
-			var keyString = _configuration["Jwt:Key"] ?? "dev_secret_change_this_to_secure_and_long";
-			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
-			var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+			var result = await _jwtAuthenticationService.Authenticate(request);
 			
+			if (result == null)
+				return Unauthorized("Invalid email or password.");
 			
-			int expiresMinutes;
-			if (!int.TryParse(_configuration["Jwt:ExpiresMinutes"], out expiresMinutes))
-				expiresMinutes = 60;
-
-			var token = new JwtSecurityToken(
-				issuer: _configuration["Jwt:Issuer"],
-				audience: _configuration["Jwt:Audience"],
-				claims: claims,
-				expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
-				signingCredentials: creds
-			);
+			return Ok(result);
 			
-			var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-			return Ok(new { token = tokenString });
+		}
+		[AllowAnonymous]
+		[HttpPost("Refresh")]
+		public async Task<ActionResult<UserLoginResponse?>> Refresh([FromBody] UserRefreshRequest request)
+		{
+			if(string.IsNullOrEmpty(request.Token))
+				return BadRequest("Invalid Token");
+			
+			var result = await _jwtAuthenticationService.ValidateRefreshToken(request.Token);
+			
+			return result is not null ? result : Unauthorized();
 		}
 	}
 }
