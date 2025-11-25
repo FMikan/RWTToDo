@@ -19,7 +19,7 @@ namespace Backend.Controllers
             _context = context;
         }
 
-        [Authorize]
+        
         [HttpGet("me")]
         public async Task<IActionResult> Me()
         {
