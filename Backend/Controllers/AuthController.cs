@@ -74,7 +74,7 @@ namespace Backend.Controllers{
 		[HttpPost("Refresh")]
 		public async Task<ActionResult<UserLoginResponse?>> Refresh([FromBody] UserRefreshRequest request)
 		{
-			if(string.IsNullOrEmpty(request.Token))
+			if (string.IsNullOrEmpty(request.Token))
 				return BadRequest("Invalid Token");
 			
 			var result = await _jwtAuthenticationService.ValidateRefreshToken(request.Token);

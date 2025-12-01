@@ -10,4 +10,6 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    
+    public DbSet<Subject> Subjects { get; set; }
 }
