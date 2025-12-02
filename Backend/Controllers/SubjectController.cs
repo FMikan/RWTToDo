@@ -75,8 +75,21 @@ namespace Backend.Controllers
             if (subject == null)
                 return NotFound("Subject not found.");
             
-            subject.Name = request.Name;
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             
+            if (userIdString == null)
+                return Unauthorized("User ID not found in token.");
+            
+            Guid userId;
+            
+            if (!Guid.TryParse(userIdString, out userId))
+                return Unauthorized("Invalid user ID format.");
+            
+            if (subject.UserId != userId)
+                return Unauthorized("You do not have permission to update this subject.");
+            
+            subject.Name = request.Name;
+                
             try
             {
                 await _dbContext.SaveChangesAsync();
@@ -100,6 +113,19 @@ namespace Backend.Controllers
             
             if (subject == null)
                 return NotFound("Subject not found.");
+            
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            if (userIdString == null)
+                return Unauthorized("User ID not found in token.");
+            
+            Guid userId;
+            
+            if (!Guid.TryParse(userIdString, out userId))
+                return Unauthorized("Invalid user ID format.");
+            
+            if (subject.UserId != userId)
+                return Unauthorized("You do not have permission to update this subject.");
             
             _dbContext.Subjects.Remove(subject);
 

@@ -6,9 +6,9 @@ namespace Backend.Repositories;
 
 public class SubjectRepository
 {
-    private AppDbContext _dbContext;
+    private readonly AppDbContext _dbContext;
     
-    public  SubjectRepository(AppDbContext dbContext)
+    public SubjectRepository(AppDbContext dbContext)
     {
         _dbContext = dbContext;
     }
