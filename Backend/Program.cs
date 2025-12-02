@@ -1,6 +1,9 @@
 using System.Text;
+using Backend.BackgroundServices;
+using Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using Backend.Data;
+using Backend.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -37,14 +40,44 @@ builder.Services.AddAuthentication(options =>
     };
 });
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<JwtAuthenticationService>();
+builder.Services.AddScoped<RefreshTokenRepository>();
+
+builder.Services.AddHostedService<ExpiredTokenRemovalBackgroundService>();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        BearerFormat = "JWT",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Description = "Enter your JWT Access Token",
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+    options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtSecurityScheme, Array.Empty<string>() }
+    });
+});
 
 var app = builder.Build();
 
 // Middleware
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+   // app.MapOpenApi();
+   // app.MapScalarApiReference();
+   
+   app.UseSwagger();
+   app.UseSwaggerUI();
 }
 
 app.UseAuthentication();
