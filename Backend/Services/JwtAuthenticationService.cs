@@ -6,6 +6,7 @@ using Backend.Models;
 using Backend.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
 
 namespace Backend.Services;
 
@@ -85,9 +86,12 @@ public class JwtAuthenticationService
     {
         var refreshTokenValidityMins = _configuration.GetValue<int>("Jwt:RefreshTokenValidityMins");
         
+        var randomBytes = new byte[32];
+        RandomNumberGenerator.Fill(randomBytes);
+        
         var refreshToken = new RefreshToken
         {
-            Token = Guid.NewGuid().ToString(),
+            Token = Convert.ToBase64String(randomBytes),
             Expiry = DateTime.UtcNow.AddMinutes(refreshTokenValidityMins),
             UserId = userId
         };

@@ -8,7 +8,7 @@ public class RefreshTokenRepository
 {
     private AppDbContext _dbContext;
 
-    public RefreshTokenRepository(AppDbContext dbContext){
+    public RefreshTokenRepository(AppDbContext dbContext) {
         _dbContext = dbContext;
     }
     public async Task<RefreshToken?> Get(string token) =>

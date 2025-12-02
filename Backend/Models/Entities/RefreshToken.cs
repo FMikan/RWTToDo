@@ -16,7 +16,8 @@ public class RefreshToken
 
     [Column("expiry")]
     public DateTime Expiry { get; set; }
-
+    
+    [ForeignKey("User")]
     [Column("user_id")]
     public Guid UserId { get; set; }
 }

@@ -115,5 +115,31 @@ namespace Backend.Controllers
             return Ok("Subject deleted.");
 
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetSubjects()
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            if (userIdString == null)
+                return Unauthorized("User ID not found in token.");
+            
+            Guid userId;
+            
+            if (!Guid.TryParse(userIdString, out userId))
+                return Unauthorized("Invalid user ID format.");
+            
+            var subjects = await _dbContext.Subjects
+                .Where(x => x.UserId == userId)
+                .Select(x => new SubjectListDto
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                })
+                .ToListAsync();
+            
+            return Ok(subjects);
+        }
     }
 }   
