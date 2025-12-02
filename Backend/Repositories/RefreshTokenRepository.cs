@@ -8,7 +8,7 @@ public class RefreshTokenRepository
 {
     private AppDbContext _dbContext;
 
-    public RefreshTokenRepository(AppDbContext dbContext){
+    public RefreshTokenRepository(AppDbContext dbContext) {
         _dbContext = dbContext;
     }
     public async Task<RefreshToken?> Get(string token) =>
@@ -21,6 +21,7 @@ public class RefreshTokenRepository
     }
 
     public async Task Delete(RefreshToken refreshToken)
+    
     {
         _dbContext.RefreshTokens.Remove(refreshToken);
         await _dbContext.SaveChangesAsync();
