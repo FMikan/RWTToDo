@@ -167,5 +167,29 @@ namespace Backend.Controllers
             
             return Ok(subjects);
         }
+        
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SubjectListDto>> GetById(Guid id)
+        {
+            var subject = await _dbContext.Subjects.FirstOrDefaultAsync(s => s.Id == id);
+
+            if (subject == null)
+                return NotFound("Subject not found.");
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+                return Unauthorized("User ID missing in token.");
+
+            if (subject.UserId.ToString() != userId)
+                return Forbid("You do not have permission to access this subject.");
+
+            return Ok(new SubjectListDto
+            {
+                Id = subject.Id,
+                Name = subject.Name
+            });
+        }
     }
 }   

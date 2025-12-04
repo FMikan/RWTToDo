@@ -9,7 +9,7 @@ namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    
     public class UserController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -19,7 +19,7 @@ namespace Backend.Controllers
             _context = context;
         }
 
-        
+        [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
         {
