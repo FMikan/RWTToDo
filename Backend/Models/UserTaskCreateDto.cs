@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Backend.Services;
 
 namespace Backend.Models;
 
@@ -14,7 +16,7 @@ public class UserTaskCreateDto
 
     [MaxLength(600)]
     public string? Description { get; set; }
-
+    
     public DateTime? DueDate { get; set; }
 
     [Range(1, 5)]
