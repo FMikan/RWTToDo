@@ -4,6 +4,7 @@ using Backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TaskStatus = Backend.Models.TaskStatus;
 
 namespace Backend.Controllers;
 
@@ -122,7 +123,7 @@ public class TaskController : Controller
         .FirstOrDefaultAsync(s => s.Id == id);
             
       if (userTask == null)
-        return NotFound("Subject not found.");
+        return NotFound("Task not found.");
             
       var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             
@@ -133,7 +134,7 @@ public class TaskController : Controller
         return Unauthorized("Invalid user ID format.");
             
       if (userTask.UserId != userId)
-        return Unauthorized("You do not have permission to update this subject.");
+        return Unauthorized("You do not have permission to update this task.");
             
       _dbContext.Tasks.Remove(userTask);
 
@@ -148,5 +149,67 @@ public class TaskController : Controller
             
       return Ok("Task deleted.");
 
+    }
+
+    [Authorize]
+    [HttpPatch("{id}/complete")]
+    public async Task<IActionResult> CompleteTask(Guid id)
+    {
+      var task = await _dbContext.Tasks.FindAsync(id);
+
+      if (task == null)
+        return NotFound("Task not found.");
+
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      if (userId == null || task.UserId.ToString() != userId)
+        return Unauthorized("You do not have permission to update this task.");
+
+      task.Status = TaskStatus.Completed;
+
+      try
+      {
+        await _dbContext.SaveChangesAsync();
+      }
+      catch
+      {
+        return StatusCode(500, "Error completing task");
+      }
+
+      return Ok(new
+      {
+        message = "Task marked as completed.",
+        taskId = task.Id,
+        status = task.Status.ToString()
+      });
+    }
+
+    [Authorize]
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateTask(Guid id, [FromBody] UserTaskUpdateDto request)
+    {
+      var userTask = await _dbContext.Tasks.FindAsync(id);
+
+      if (userTask == null)
+        return NotFound("Task not found.");
+
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      if (userId == null || userTask.UserId.ToString() != userId)
+        return Unauthorized("You do not have permission to update this task.");
+
+      userTask.Title = request.Title;
+      userTask.Description = request.Description;
+      userTask.DueDate = request.DueDate;
+      userTask.Priority = request.Priority;
+
+      try
+      {
+        await _dbContext.SaveChangesAsync();
+      }
+      catch
+      {
+        return StatusCode(500, "Error updating task");
+      }
+
+      return Ok("Task updated successfully.");
     }
 }
