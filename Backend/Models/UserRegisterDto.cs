@@ -16,7 +16,7 @@ public class UserRegisterDto
     public string LastName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Email is required.")]
-    [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", 
+    [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$",
         ErrorMessage = "Email format is invalid.")]
     public string Email { get; set; } = string.Empty;
 
