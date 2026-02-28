@@ -1,31 +1,27 @@
-# Build artefacts
-bin/
-obj/
-
-# Rider IDE folderi i konfiguracija
-.idea/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# Visual Studio folderi (ako koristiš ili surađuješ s nekim tko koristi VS)
-.vs/
-*.vsp
-*.vspscc
-
-# Lokalne postavke za debugiranje
-Backend/Properties/launchSettings.json
-
-# Konfiguracijski fajlovi s osjetljivim podacima (connection stringovi, API ključevi)
-appsettings.Development.json
-
-# HTTP testni fajlovi (ako ih koristiš i ne želiš ih pushati)
-*.http
-
-# Log fajlovi i temp datoteke
+# Logs
+logs
 *.log
-*.tmp
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Ostalo
-*.DS_Store
+node_modules
+dist
+dist-ssr
+*.local
+.env
+.env.*
+!.env.example
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
