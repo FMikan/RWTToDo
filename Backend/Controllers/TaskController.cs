@@ -59,6 +59,7 @@ public class TaskController : Controller
 
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<UserTaskReadDto>> GetById(Guid id)
     {
@@ -117,7 +118,7 @@ public class TaskController : Controller
     [Authorize]
     [HttpDelete("{id}")]
         
-    public async Task<IActionResult> DeleteSubject(Guid id)
+    public async Task<IActionResult> DeleteTask(Guid id)
     {
       var userTask = await _dbContext.Tasks 
         .FirstOrDefaultAsync(s => s.Id == id);
@@ -134,7 +135,7 @@ public class TaskController : Controller
         return Unauthorized("Invalid user ID format.");
             
       if (userTask.UserId != userId)
-        return Unauthorized("You do not have permission to update this task.");
+        return Unauthorized("You do not have permission to delete this task.");
             
       _dbContext.Tasks.Remove(userTask);
 
